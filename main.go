@@ -2,33 +2,76 @@ package main
 
 import (
   "fmt"
-  "math/rand"
- "time"
-    
+  "encoding/json"
 )
 
-
-
-
-
- 
-
-func randomNumberChanel(numChan chan  int)   {
-  min := 20
-  max := 100
-
-  rand.Seed(time.Now().UnixNano())
-  random := rand.Intn(max - min + 1) + min 
-
-
-  numChan  <- random
+   
+// declaring a struct
+type Human struct{
+        
+  // defining struct variables
+  Name string  `json:"Name"`
+  Address string  `json:"Address"`
+  Age int  `json:"Age"`
 }
 
-func main() {
-  number := make(chan int )
-  defer  close(number) // defer == fo it at last
-  go randomNumberChanel( number)
-  num  := <- number
  
-  fmt.Println( num)
+func main() {
+        
+    // defining an array instance
+    // of struct type
+    var human []Human
+        
+    // JSON array to be decoded
+    // to an array
+    Data := []byte(`
+    [
+        {"Name": "sofiane", "Address": "Djborland", "Age": 26},
+        {"Name": "mohMost", "Address": "HotVille", "Age": 24},
+        {"Name": "Yanis", "Address": "MarseilleBébé", "Age": 25}
+    ]`)
+        
+    // decoding JSON array to 
+    // human2 array
+    err := json.Unmarshal(Data, &human)
+        
+        if err != nil {
+        
+        // if error is not nil
+        // print error
+            fmt.Println(err)
+        }
+        
+    // printing decoded array 
+    // values one by one
+    for  i := range human{
+        
+        fmt.Println( human[i])
+    }
+ 
+
+    Salfils := Human{
+      Name: "Salfils",
+      Address: "Dans sa chambre",
+      Age: 24,
+    } 
+     mohProut := Human{
+      Name: "Moh Prout",
+    Address: "Mirabo" ,
+    Age: 24,
+  } 
+ 
+  rkhwas := []Human{ Salfils,  mohProut}
+ 
+    
+  b, err := json.Marshal(rkhwas)
+  if err != nil {
+      fmt.Printf("Error: %s", err)
+      return;
+  }
+  
+  fmt.Println(string(b))
+
+
+
 }
