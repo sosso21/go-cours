@@ -1,3 +1,3 @@
-module cour-1
+module todo-app
 
 go 1.19

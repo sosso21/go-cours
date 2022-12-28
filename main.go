@@ -1,26 +1,37 @@
 package main
 
 import (
-  "fmt"
-  "errors"
-  
-)
- //        [T float64 | int64] 
- // ?   ~ : can accept float32 
+	"fmt"
 
-func Divide [T ~float64 | ~int64](a , b T) (T , error) {
-  if b == 0 {
-    return 0.0 , errors.New("Invalid Name")
-  }
-  return  a/b  ,nil
+	"net/http"
+	"text/template"
+)
+
+const port = ":3000"
+
+func Api(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "contact me : ")
+}
+func RenderTemplate(w http.ResponseWriter, tmpl string) {
+	t, err := template.ParseFiles("./view/" + tmpl + ".page.tmpl")
+	if err != err {
+		fmt.Println("error")
+	}
+	t.Execute(w, nil)
+}
+func Contact(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "contact me : ")
+}
+func Home(w http.ResponseWriter, r *http.Request) {
+	RenderTemplate(w, "home")
 }
 
 func main() {
-  // result , err := Divide(22.00, 7.00)
-  result , err := Divide[float64](22.00, 7.00)
-   if  err != nil {
-    panic(err)
-   }
+	http.HandleFunc("/api", Api)
+	http.HandleFunc("/", Home)
+	http.HandleFunc("/contact", Contact)
 
-   fmt.Printf("the result is: %v",result)
+	fmt.Printf("server starting on : http://localhost%s/ !", port)
+
+	http.ListenAndServe(port, nil)
 }
